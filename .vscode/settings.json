@@ -1,0 +1,12 @@
+{
+  "editor.formatOnSave": false,
+  // Enable per-language
+  "[typescript]": {
+    "editor.formatOnSave": true
+  },
+  "tslint.alwaysShowRuleFailuresAsWarnings": true,
+  "editor.codeActionsOnSave": {
+    "source.fixAll": true
+  },
+  "typescript.tsdk": "node_modules\\typescript\\lib"
+}
