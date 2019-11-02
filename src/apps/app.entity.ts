@@ -30,4 +30,21 @@ export class App {
     cascade: true,
   })
   channels: Channel[];
+
+  toResponseObject() {
+    const { name, slug, token, members, channels } = this;
+    const responseObject: any = { name, slug, token };
+
+    if (members !== undefined) {
+      responseObject.members = members.map(user => user.toResponseObject());
+    }
+
+    if (channels !== undefined) {
+      responseObject.channels = channels.map(channel =>
+        channel.toResponseObject(),
+      );
+    }
+
+    return responseObject;
+  }
 }

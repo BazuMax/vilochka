@@ -4,6 +4,7 @@ import { Channel } from "~/channel/channel.entity";
 import { Repository } from "typeorm";
 import { AppsService } from "~/apps/apps.service";
 import { ChannelDto } from "~/channel/channel.dto";
+import RandToken from "rand-token";
 
 @Injectable()
 export class ChannelService {
@@ -20,10 +21,12 @@ export class ChannelService {
   async createChannel(userId: number, appId: number, channelData: ChannelDto) {
     const app = await this.appsService.getApp(userId, appId);
 
-    const channel = new Channel();
+    let channel = new Channel();
     channel.name = channelData.name;
+    channel.stringId = RandToken.uid(32);
 
+    channel = await this.channelRepository.save(channel);
 
-    app.channels.push();
+    return (await this.appsService.addChannel(app, channel)).toResponseObject();
   }
 }

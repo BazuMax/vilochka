@@ -10,6 +10,7 @@ import { App } from "./app.entity";
 import { User } from "~/users/user.entity";
 import { Repository } from "typeorm";
 import RandToken from "rand-token";
+import { Channel } from "~/channel/channel.entity";
 
 @Injectable()
 export class AppsService {
@@ -75,5 +76,10 @@ export class AppsService {
     }
 
     return app;
+  }
+
+  async addChannel(app: App, channel: Channel): Promise<App> {
+    app.channels.push(channel);
+    return await this.appRepository.save(app);
   }
 }
