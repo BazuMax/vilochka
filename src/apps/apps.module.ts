@@ -11,5 +11,6 @@ import { Channel } from "~/channel/channel.entity";
   imports: [TypeOrmModule.forFeature([App, User, Channel]), UsersModule],
   controllers: [AppsController],
   providers: [AppsService],
+  exports: [AppsService],
 })
 export class AppsModule {}
