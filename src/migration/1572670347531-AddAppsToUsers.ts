@@ -1,7 +1,7 @@
 import {MigrationInterface, QueryRunner} from "typeorm";
 
-export class AddAppsToUser1572613433237 implements MigrationInterface {
-    name = 'AddAppsToUser1572613433237'
+export class AddAppsToUsers1572670347531 implements MigrationInterface {
+    name = 'AddAppsToUsers1572670347531';
 
     public async up(queryRunner: QueryRunner): Promise<any> {
         await queryRunner.query(`CREATE TABLE "user_apps_app" ("userId" integer NOT NULL, "appId" integer NOT NULL, CONSTRAINT "PK_788d6601b1f2c4528194b61afbe" PRIMARY KEY ("userId", "appId"))`, undefined);
