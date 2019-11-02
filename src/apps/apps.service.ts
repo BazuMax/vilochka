@@ -87,7 +87,7 @@ export class AppsService {
       throw new UnauthorizedException();
     }
 
-    return app.toResponseObject();
+    return app;
   }
 
   async addChannel(app: App, channel: Channel): Promise<App> {
