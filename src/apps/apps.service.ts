@@ -16,7 +16,10 @@ export class AppsService {
   ) {}
 
   async addApp(userId: number, appData: AppDto) {
-    const user = await this.userRepository.findOne({ where: { id: userId } });
+    const user = await this.userRepository.findOne({
+      where: { id: userId },
+      relations: ["apps"],
+    });
 
     let app = new App();
     Object.assign(app, appData, { token: RandToken.uid(32) });
