@@ -1,4 +1,10 @@
-import { Injectable, UnauthorizedException } from "@nestjs/common";
+import {
+  Injectable,
+  UnauthorizedException,
+  Logger,
+  HttpException,
+  HttpStatus,
+} from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import { Channel } from "~/channel/channel.entity";
 import { Repository } from "typeorm";
@@ -14,12 +20,24 @@ export class ChannelService {
     private appsService: AppsService,
   ) {}
 
-  async getChannels(userId: number, appId: number) {
-    const app = await this.appsService.getApp(userId, appId);
+  async getChannels(userId: number, appSlug: string) {
+    const app = await this.appsService.getAppBySlug(userId, appSlug);
     return app.channels;
   }
-  async createChannel(userId: number, appId: number, channelData: ChannelDto) {
-    const app = await this.appsService.getApp(userId, appId);
+  async createChannel(
+    userId: number,
+    appSlug: string,
+    channelData: ChannelDto,
+  ) {
+    const app = await this.appsService.getAppBySlug(userId, appSlug);
+
+    if (
+      app.channels.findIndex(
+        appChannel => appChannel.name === channelData.name,
+      ) !== -1
+    ) {
+      throw new HttpException("same app name exists", HttpStatus.CONFLICT);
+    }
 
     let channel = new Channel();
     channel.name = channelData.name;

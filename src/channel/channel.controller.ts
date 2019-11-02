@@ -13,14 +13,14 @@ import { User } from "~/users/user.decorator";
 import { ChannelDto } from "~/channel/channel.dto";
 import { ValidationPipe } from "~/shared/validation.pipe";
 
-@Controller("api/apps/:appId/channels")
+@Controller("api/apps/:appSlug/channels")
 export class ChannelController {
   constructor(private readonly channelService: ChannelService) {}
 
   @Get()
   @UseGuards(AuthGuard("jwt"))
-  getChannels(@User("id") userId, @Param("appId") appId) {
-    return this.channelService.getChannels(userId, appId);
+  getChannels(@User("id") userId, @Param("appSlug") appSlug) {
+    return this.channelService.getChannels(userId, appSlug);
   }
 
   @Post()
@@ -28,9 +28,9 @@ export class ChannelController {
   @UsePipes(new ValidationPipe())
   createChannel(
     @User("id") userId,
-    @Param("appId") appId,
+    @Param("appSlug") appSlug,
     @Body() channelData: ChannelDto,
   ) {
-    return this.channelService.createChannel(userId, appId, channelData);
+    return this.channelService.createChannel(userId, appSlug, channelData);
   }
 }
