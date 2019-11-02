@@ -1,7 +1,7 @@
 import { Injectable, HttpException, HttpStatus } from "@nestjs/common";
 import { AppDto } from "~/apps/app.dto";
 import { InjectRepository } from "@nestjs/typeorm";
-import { App } from "~/apps/app.entity";
+import { App } from "./app.entity";
 import { User } from "~/users/user.entity";
 import { Repository } from "typeorm";
 import RandToken from "rand-token";
@@ -36,8 +36,9 @@ export class AppsService {
       throw new HttpException("app not found", HttpStatus.BAD_REQUEST);
     }
 
-    user.apps.splice(appIndex, 1);
-    user = await this.userRepository.save(user);
+    await this.appRepository.delete(appId);
+
+    user = await this.userRepository.findOne({ where: { id: userId } });
 
     return user.apps;
   }
