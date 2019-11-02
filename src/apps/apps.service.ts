@@ -63,21 +63,6 @@ export class AppsService {
     return apps || [];
   }
 
-  async getApp(userId: number, appId: number): Promise<App> {
-    const app = await this.appRepository.findOne({
-      where: { id: appId },
-      relations: ["members", "channels"],
-    });
-    if (
-      app === undefined ||
-      app.members.findIndex(user => user.id === userId) === -1
-    ) {
-      throw new UnauthorizedException();
-    }
-
-    return app;
-  }
-
   async getAppBySlug(userId: number, slug: string): Promise<App> {
     const app = await this.appRepository.findOne({
       where: { slug, members: { id: userId } },
