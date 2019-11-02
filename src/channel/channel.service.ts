@@ -47,4 +47,24 @@ export class ChannelService {
 
     return (await this.appsService.addChannel(app, channel)).toResponseObject();
   }
+
+  async deleteChannel(
+    userId: number,
+    appSlug: string,
+    channelStringId: string,
+  ) {
+    const app = await this.appsService.getAppBySlug(userId, appSlug);
+
+    if (
+      app.channels.findIndex(
+        appChannel => appChannel.stringId === channelStringId,
+      ) === -1
+    ) {
+      throw new UnauthorizedException();
+    }
+
+    await this.channelRepository.delete({ stringId: channelStringId });
+
+    return await this.appsService.getAppBySlug(userId, appSlug);
+  }
 }

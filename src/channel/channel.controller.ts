@@ -6,6 +6,7 @@ import {
   Post,
   Body,
   UsePipes,
+  Delete,
 } from "@nestjs/common";
 import { ChannelService } from "~/channel/channel.service";
 import { AuthGuard } from "@nestjs/passport";
@@ -32,5 +33,15 @@ export class ChannelController {
     @Body() channelData: ChannelDto,
   ) {
     return this.channelService.createChannel(userId, appSlug, channelData);
+  }
+
+  @Delete(":stringId")
+  @UseGuards(AuthGuard("jwt"))
+  deleteChannel(
+    @User("id") userId,
+    @Param("appSlug") appSlug,
+    @Param("stringId") stringId,
+  ) {
+    return this.channelService.deleteChannel(userId, appSlug, stringId);
   }
 }
