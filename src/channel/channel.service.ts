@@ -36,7 +36,7 @@ export class ChannelService {
         appChannel => appChannel.name === channelData.name,
       ) !== -1
     ) {
-      throw new HttpException("same app name exists", HttpStatus.CONFLICT);
+      throw new HttpException("same channel name exists", HttpStatus.CONFLICT);
     }
 
     let channel = new Channel();
