@@ -26,8 +26,7 @@ export class User {
   @Column({ length: 1024 })
   password: string;
 
-  @ManyToMany(type => App, {
-    eager: true,
+  @ManyToMany(type => App, app => app.members, {
     cascade: true,
   })
   @JoinTable()

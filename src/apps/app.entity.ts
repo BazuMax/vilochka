@@ -15,6 +15,6 @@ export class App {
   @Column()
   token: string;
 
-  @ManyToMany(type => User)
+  @ManyToMany(type => User, user => user.apps)
   members: User[];
 }
