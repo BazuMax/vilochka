@@ -7,10 +7,10 @@ export class Channel {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @Column({ unique: true })
+  @Column()
   stringId: string;
 
-  @Column({ unique: true })
+  @Column()
   name: string;
 
   @ManyToOne(type => App, app => app.channels)
