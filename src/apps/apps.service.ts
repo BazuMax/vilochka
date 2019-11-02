@@ -54,6 +54,6 @@ export class AppsService {
 
     const apps = user.apps;
 
-    return apps;
+    return apps || [];
   }
 }
