@@ -1,4 +1,9 @@
-import { Injectable, HttpException, HttpStatus } from "@nestjs/common";
+import {
+  Injectable,
+  HttpException,
+  HttpStatus,
+  UnauthorizedException,
+} from "@nestjs/common";
 import { AppDto } from "~/apps/app.dto";
 import { InjectRepository } from "@nestjs/typeorm";
 import { App } from "./app.entity";
@@ -55,5 +60,20 @@ export class AppsService {
     const apps = user.apps;
 
     return apps || [];
+  }
+
+  async getApp(userId: number, appId: number): Promise<App> {
+    const app = await this.appRepository.findOne({
+      where: { id: appId },
+      relations: ["members", "channels"],
+    });
+    if (
+      app === undefined ||
+      app.members.findIndex(user => user.id === userId) === -1
+    ) {
+      throw new UnauthorizedException();
+    }
+
+    return app;
   }
 }
