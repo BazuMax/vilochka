@@ -78,6 +78,18 @@ export class AppsService {
     return app;
   }
 
+  async getAppBySlug(userId: number, slug: string): Promise<App> {
+    const app = await this.appRepository.findOne({
+      where: { slug, members: { id: userId } },
+      relations: ["members", "channels"],
+    });
+    if (app === undefined) {
+      throw new UnauthorizedException();
+    }
+
+    return app.toResponseObject();
+  }
+
   async addChannel(app: App, channel: Channel): Promise<App> {
     app.channels.push(channel);
     return await this.appRepository.save(app);

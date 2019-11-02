@@ -18,6 +18,12 @@ import { AppsService } from "~/apps/apps.service";
 export class AppsController {
   constructor(private readonly appsService: AppsService) {}
 
+  @Get(":slug")
+  @UseGuards(AuthGuard("jwt"))
+  getApp(@User("id") userId, @Param("slug") slug: string) {
+    return this.appsService.getAppBySlug(userId, slug);
+  }
+
   @Get()
   @UseGuards(AuthGuard("jwt"))
   getApps(@User("id") userId) {
