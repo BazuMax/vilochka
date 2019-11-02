@@ -22,7 +22,7 @@ export class ChannelService {
 
   async getChannels(userId: number, appSlug: string) {
     const app = await this.appsService.getAppBySlug(userId, appSlug);
-    return app.channels;
+    return app.channels.map(channel => channel.toResponseObject());
   }
   async createChannel(
     userId: number,
