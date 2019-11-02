@@ -6,6 +6,7 @@ import {
   HttpStatus,
   Logger,
 } from "@nestjs/common";
+import { QueryFailedError } from "typeorm/error/QueryFailedError";
 
 @Catch()
 export class HttpErrorFilter implements ExceptionFilter {
@@ -28,7 +29,10 @@ export class HttpErrorFilter implements ExceptionFilter {
           : "Internal server error",
     };
 
-    if (status == HttpStatus.INTERNAL_SERVER_ERROR) {
+    if (exception.name === "QueryFailedError") {
+      Logger.warn(exception);
+      this.catchTypeOrmQuery(exception, errorResponse);
+    } else if (status === HttpStatus.INTERNAL_SERVER_ERROR) {
       console.error(exception);
     }
 
@@ -39,5 +43,14 @@ export class HttpErrorFilter implements ExceptionFilter {
     );
 
     response.status(404).json(errorResponse);
+  }
+
+  catchTypeOrmQuery(exception: any, errorResponse: any) {
+    const dbCode = exception.code;
+    const detail = exception.detail;
+
+    errorResponse.message = "Database error";
+    errorResponse.dbCode = dbCode;
+    errorResponse.detail = detail;
   }
 }
