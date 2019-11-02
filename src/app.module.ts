@@ -9,7 +9,8 @@ import { UsersModule } from "./users/users.module";
 import ormconfig from "./ormconfig";
 import { PassportModule } from "@nestjs/passport";
 import { LoggingInterceptor } from "~/shared/logging.interceptor";
-import { APP_INTERCEPTOR } from "@nestjs/core";
+import { APP_INTERCEPTOR, APP_FILTER } from "@nestjs/core";
+import { HttpErrorFilter } from "~/shared/http-error.filter";
 
 @Module({
   imports: [
@@ -25,6 +26,10 @@ import { APP_INTERCEPTOR } from "@nestjs/core";
     {
       provide: APP_INTERCEPTOR,
       useClass: LoggingInterceptor,
+    },
+    {
+      provide: APP_FILTER,
+      useClass: HttpErrorFilter,
     },
   ],
 })
