@@ -46,8 +46,11 @@ export class AppsService {
     return user.apps;
   }
 
-  async getApps(userId: number) {
-    const user = await this.userRepository.findOne({ where: { id: userId } });
+  async getAppsByUserID(userId: number) {
+    const user = await this.userRepository.findOne({
+      where: { id: userId },
+      relations: ["apps"],
+    });
 
     const apps = user.apps;
 

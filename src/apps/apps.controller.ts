@@ -21,7 +21,7 @@ export class AppsController {
   @Get()
   @UseGuards(AuthGuard("jwt"))
   getApps(@User("id") userId) {
-    return this.appsService.getApps(userId);
+    return this.appsService.getAppsByUserID(userId);
   }
 
   @Post()
