@@ -12,6 +12,7 @@ import { LoggingInterceptor } from "~/shared/logging.interceptor";
 import { APP_INTERCEPTOR, APP_FILTER } from "@nestjs/core";
 import { HttpErrorFilter } from "~/shared/http-error.filter";
 import { FilesModule } from './files/files.module';
+import { ConfigModule } from './config/config.module';
 
 @Module({
   imports: [
@@ -21,6 +22,7 @@ import { FilesModule } from './files/files.module';
     AuthModule,
     UsersModule,
     FilesModule,
+    ConfigModule,
   ],
   controllers: [AppController],
   providers: [
