@@ -11,7 +11,12 @@ export class ChannelRO {
   name: string;
 }
 
-export class UploadVersionDto {
+export class ChannelRequestDto {
+  appSlug: string;
+  stringId: string;
+}
+
+export class UploadVersionDto extends ChannelRequestDto {
   version: string;
   platform: string;
   arch: string;

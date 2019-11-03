@@ -16,11 +16,6 @@ import { AuthGuard } from "@nestjs/passport";
 import { User } from "~/users/user.decorator";
 import { ChannelDto, UploadVersionDto } from "~/channel/channel.dto";
 import { ValidationPipe } from "~/shared/validation.pipe";
-import { join } from "path";
-import multer from "multer";
-const upload = multer({
-  dest: join(__dirname, "../../.files"),
-});
 
 @Controller("api/apps/:appSlug/channels")
 export class ChannelController {
@@ -53,25 +48,14 @@ export class ChannelController {
     return this.channelService.deleteChannel(userId, appSlug, stringId);
   }
 
-  @Post(":stringId/upload")
+  @Post(":stringId/:platform/:arch/:version/upload")
   @UseGuards(AuthGuard("jwt"))
   async uploadVersion(
     @User("id") userId,
-    @Param("appSlug") appSlug,
-    @Param("stringId") stringId,
+    @Param() params: UploadVersionDto,
     @Request() req,
     @Response() resp,
   ) {
-    upload.any()(req, resp, err => {
-      const uploadVersion: UploadVersionDto = req.body;
-      this.channelService.uploadVersion(
-        userId,
-        appSlug,
-        stringId,
-        uploadVersion,
-        req,
-        resp,
-      );
-    });
+    this.channelService.uploadVersion(userId, params, req, resp);
   }
 }

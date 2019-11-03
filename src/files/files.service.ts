@@ -6,24 +6,46 @@ import { File } from "~/files/file.entity";
 import { generateSHAs } from "~/files/utils/sha";
 import { InjectRepository } from "@nestjs/typeorm";
 import { Repository } from "typeorm";
+import { ConfigService } from "~/config/config.service";
+import multer from "multer";
+import util from "util";
+import { Request, Response } from "express";
 
 @Injectable()
 export class FilesService implements OnModuleInit {
+  upload: (req: Request, resp: Response) => Promise<void>;
+  filesRoot: string = "";
+
   constructor(
     @InjectRepository(File)
     private fileRepository: Repository<File>,
+    private configService: ConfigService,
   ) {}
 
   onModuleInit() {
-    Logger.log(".files");
-    if (fs.existsSync(join(__dirname, "../../.files")) === false) {
-      fs.mkdirSync(join(__dirname, "../../.files"));
+    this.filesRoot = this.configService.filesRoot;
+    if (fs.existsSync(this.filesRoot) === false) {
+      fs.mkdirSync(this.filesRoot);
     }
+
+    this.upload = util.promisify(
+      multer({
+        dest: this.filesRoot,
+      }).any(),
+    );
   }
 
-  async uploadFiles(info: UploadVersionDto, filesInfo: Express.Multer.File[]) {
+  async uploadFiles(req: Request, resp: Response) {
+    await this.upload(req, resp);
+  }
+
+  async uploadFileInfos(
+    info: UploadVersionDto,
+    filesInfo: Express.Multer.File[],
+  ) {
     Logger.log(info);
     const files: File[] = [];
+
     for (const fileInfo of filesInfo) {
       const file = new File();
       file.platform = info.platform;

@@ -78,15 +78,16 @@ export class ChannelService {
 
   async uploadVersion(
     userId: number,
-    appSlug: string,
-    channelStringId: string,
-    uploadData: UploadVersionDto,
+    params: UploadVersionDto,
     req: Request,
     resp: Response,
   ) {
-    const files = req.files;
+    const app = await this.getApp(userId, params.appSlug, params.stringId);
+
+    await this.filesService.uploadFiles(req, resp);
     // @ts-ignore
-    await this.filesService.uploadFiles(uploadData, files);
-    resp.send(files);
+    await this.filesService.uploadFileInfos(params, req.files);
+
+    resp.send(req.files);
   }
 }
