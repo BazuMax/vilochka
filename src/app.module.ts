@@ -11,6 +11,7 @@ import { PassportModule } from "@nestjs/passport";
 import { LoggingInterceptor } from "~/shared/logging.interceptor";
 import { APP_INTERCEPTOR, APP_FILTER } from "@nestjs/core";
 import { HttpErrorFilter } from "~/shared/http-error.filter";
+import { FilesModule } from './files/files.module';
 
 @Module({
   imports: [
@@ -19,6 +20,7 @@ import { HttpErrorFilter } from "~/shared/http-error.filter";
     ChannelModule,
     AuthModule,
     UsersModule,
+    FilesModule,
   ],
   controllers: [AppController],
   providers: [
