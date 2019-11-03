@@ -9,8 +9,10 @@ import { InjectRepository } from "@nestjs/typeorm";
 import { Channel } from "~/channel/channel.entity";
 import { Repository } from "typeorm";
 import { AppsService } from "~/apps/apps.service";
-import { ChannelDto } from "~/channel/channel.dto";
+import { ChannelDto, UploadVersionDto } from "~/channel/channel.dto";
 import RandToken from "rand-token";
+import { Request, Response } from "express";
+import { FilesService } from "~/files/files.service";
 
 @Injectable()
 export class ChannelService {
@@ -18,6 +20,7 @@ export class ChannelService {
     @InjectRepository(Channel)
     private channelRepository: Repository<Channel>,
     private appsService: AppsService,
+    private filesService: FilesService,
   ) {}
 
   async getChannels(userId: number, appSlug: string) {
@@ -66,5 +69,19 @@ export class ChannelService {
     await this.channelRepository.delete({ stringId: channelStringId });
 
     return await this.appsService.getAppBySlug(userId, appSlug);
+  }
+
+  async uploadVersion(
+    userId: number,
+    appSlug: string,
+    channelStringId: string,
+    uploadData: UploadVersionDto,
+    req: Request,
+    resp: Response,
+  ) {
+    const files = req.files;
+    // @ts-ignore
+    await this.filesService.uploadFiles(uploadData, files);
+    resp.send(files);
   }
 }

@@ -10,3 +10,9 @@ export class ChannelRO {
   stringId: string;
   name: string;
 }
+
+export class UploadVersionDto {
+  version: string;
+  platform: string;
+  arch: string;
+}
