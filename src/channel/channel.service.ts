@@ -27,6 +27,19 @@ export class ChannelService {
     const app = await this.appsService.getAppBySlug(userId, appSlug);
     return app.channels.map(channel => channel.toResponseObject());
   }
+
+  async getApp(userId: number, appSlug: string, channelStringId: string) {
+    const app = await this.appsService.getAppBySlug(userId, appSlug);
+
+    if (
+      app.channels.findIndex(
+        appChannel => appChannel.stringId === channelStringId,
+      ) === -1
+    ) {
+      throw new UnauthorizedException();
+    }
+  }
+
   async createChannel(
     userId: number,
     appSlug: string,
@@ -56,15 +69,7 @@ export class ChannelService {
     appSlug: string,
     channelStringId: string,
   ) {
-    const app = await this.appsService.getAppBySlug(userId, appSlug);
-
-    if (
-      app.channels.findIndex(
-        appChannel => appChannel.stringId === channelStringId,
-      ) === -1
-    ) {
-      throw new UnauthorizedException();
-    }
+    const app = await this.getApp(userId, appSlug, channelStringId);
 
     await this.channelRepository.delete({ stringId: channelStringId });
 
